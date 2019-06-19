@@ -30,8 +30,6 @@ int main(int argc,char** argv)
 
     fprintf(stdout,"VERSION: 0x%08X\n",read_reg(pcie_addr,FPGA_VERSION));
 
-    write_reg(pcie_addr, LED_CONTROL, 0x02);
-
     uint32_t write_data[TEST_BRAM_SIZE/4], read_data[TEST_BRAM_SIZE/4];
 
     // create test data.
@@ -43,11 +41,9 @@ int main(int argc,char** argv)
 
     // write bram
     for (int i=0; i<TEST_BRAM_SIZE/4; i++) bram_ptr[i] = write_data[i];
-    //for (int i=0; i<TEST_BRAM_SIZE/4; i++) write_reg(pcie_addr, TEST_BRAM_OFFSET+0x4*i, write_data[i]);
 
     // read bram
     for (int i=0; i<TEST_BRAM_SIZE/4; i++) read_data[i] = bram_ptr[i];
-    //for (int i=0; i<TEST_BRAM_SIZE/4; i++) read_data[i] = read_reg(pcie_addr, TEST_BRAM_OFFSET+0x4*i);
 
     // chech bram results
     int errors = 0;
