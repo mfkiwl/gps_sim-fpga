@@ -13,7 +13,7 @@ load_features ipintegrator
 update_ip_catalog
 
 #read_ip ../source/matinv/matinv.xci
-#read_ip ../source/matinv_ram/matinv_ram.xci
+read_ip ../source//matinv_ram.xci
 upgrade_ip -quiet  [get_ips *]
 generate_target {all} [get_ips *]
 
