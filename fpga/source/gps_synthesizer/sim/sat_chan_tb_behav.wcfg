@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="sat_chan_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="sat_chan_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="974501993fs"></ZoomEndTime>
+      <Cursor1Time time="0fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="207"></NameColumnWidth>
+      <ValueColumnWidth column_width="142"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="18" />
+   <wvobject type="logic" fp_name="/sat_chan_tb/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/sat_chan_tb/enable">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/freq">
+      <obj_property name="ElementShortName">freq[31:0]</obj_property>
+      <obj_property name="ObjectShortName">freq[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/gain">
+      <obj_property name="ElementShortName">gain[15:0]</obj_property>
+      <obj_property name="ObjectShortName">gain[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/real_out">
+      <obj_property name="ElementShortName">real_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">real_out[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/imag_out">
+      <obj_property name="ElementShortName">imag_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">imag_out[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider8" type="divider">
+      <obj_property name="label">uut</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/sat_chan_tb/uut/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/sat_chan_tb/uut/enable">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/freq">
+      <obj_property name="ElementShortName">freq[31:0]</obj_property>
+      <obj_property name="ObjectShortName">freq[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/gain">
+      <obj_property name="ElementShortName">gain[15:0]</obj_property>
+      <obj_property name="ObjectShortName">gain[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/real_out">
+      <obj_property name="ElementShortName">real_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">real_out[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/imag_out">
+      <obj_property name="ElementShortName">imag_out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">imag_out[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/nco_real">
+      <obj_property name="ElementShortName">nco_real[8:0]</obj_property>
+      <obj_property name="ObjectShortName">nco_real[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/nco_imag">
+      <obj_property name="ElementShortName">nco_imag[8:0]</obj_property>
+      <obj_property name="ObjectShortName">nco_imag[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/scaled_nco_real">
+      <obj_property name="ElementShortName">scaled_nco_real[15:0]</obj_property>
+      <obj_property name="ObjectShortName">scaled_nco_real[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/scaled_nco_imag">
+      <obj_property name="ElementShortName">scaled_nco_imag[15:0]</obj_property>
+      <obj_property name="ObjectShortName">scaled_nco_imag[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/sat_chan_tb/uut/p_scale">
+      <obj_property name="ElementShortName">p_scale[31:0]</obj_property>
+      <obj_property name="ObjectShortName">p_scale[31:0]</obj_property>
+   </wvobject>
+</wave_config>
