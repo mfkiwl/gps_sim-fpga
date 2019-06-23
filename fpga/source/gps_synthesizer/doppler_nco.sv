@@ -7,7 +7,7 @@ module doppler_nco (
     output logic[8:0]   imag_out
 );
 
-    // Let's use 32 bit accummulators for the DDS.
+    // Let's use 32 bit accummulators for the DDS. That gives a frequency resolution of >> 102.3e6/(2^32)  =  0.023819 Hz
     logic [31:0] phase;
     always_ff @(posedge clk) begin
         if (enable == 1) begin
