@@ -1,6 +1,5 @@
 module noise_source_tb ();
 
-    logic            clk;
     logic            reset;
     logic [15:0]     real_out, imag_out;
 

@@ -20,10 +20,10 @@ module noise_source (
     logic [28:0] d_imag1, q_imag1;
     logic [26:0] d_imag2, q_imag2;
     logic [24:0] d_imag3, q_imag3;
-    lfsr #(.WIDTH(32)) imag_lfsr0 (.datain(d_imag0), .dataout(q_imag0));
-    lfsr #(.WIDTH(30)) imag_lfsr1 (.datain(d_imag1), .dataout(q_imag1));
-    lfsr #(.WIDTH(28)) imag_lfsr2 (.datain(d_imag2), .dataout(q_imag2));
-    lfsr #(.WIDTH(26)) imag_lfsr3 (.datain(d_imag3), .dataout(q_imag3));
+    lfsr #(.WIDTH(31)) imag_lfsr0 (.datain(d_imag0), .dataout(q_imag0));
+    lfsr #(.WIDTH(29)) imag_lfsr1 (.datain(d_imag1), .dataout(q_imag1));
+    lfsr #(.WIDTH(27)) imag_lfsr2 (.datain(d_imag2), .dataout(q_imag2));
+    lfsr #(.WIDTH(25)) imag_lfsr3 (.datain(d_imag3), .dataout(q_imag3));
 
     always_ff @(posedge clk) begin
         if (1 == reset) begin
