@@ -4,10 +4,11 @@ module sat_chan_tb ();
 
     logic        enable;
     logic[31:0]  freq;
-    logic[15:0]  gain;
+    logic[15:0]  gain;    
+    logic[5:0]   ca_sel;
+    logic[35:0]  ca_seq;
     logic[15:0]  real_out;
     logic[15:0]  imag_out;
-
 
     localparam clk_period = 10;
     logic clk = 0;

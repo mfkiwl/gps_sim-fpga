@@ -8,6 +8,7 @@ set_property target_language Verilog [current_project]
 set_property default_lib work [current_project]
 
 read_ip ../doppler_rom/doppler_rom.xci
+read_ip ../ca_rom/ca_rom.xci
 upgrade_ip -quiet  [get_ips *]
 generate_target {all} [get_ips *]
 
