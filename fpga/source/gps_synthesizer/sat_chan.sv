@@ -15,40 +15,49 @@ module sat_chan (
     logic [8:0] nco_real, nco_imag;    
     doppler_nco doppler_nco_inst ( .clk(clk), .enable(enable), .freq(freq), .real_out(nco_real), .imag_out(nco_imag) );
 
-    // we need to scale the imaginary part of the NCO output by 1/sqrt(2) ~ 0.7 according to the GPS spec.
-    localparam int p_scale = (2.0**8)/$sqrt(2.0);            // supposedly this automatically rounds from float to int.
-    logic [15:0] scaled_nco_real, scaled_nco_imag;
-    logic [2*9-1:0] real_scale_var;
-    logic [8:0] imag_scale_var;
-    always_ff @(posedge clk) begin
-        real_scale_var <= $signed(p_scale)*$signed(nco_real);
-        imag_scale_var <= nco_imag;
-        scaled_nco_imag <= {{7{imag_scale_var[8]}},        imag_scale_var};        // sign extension to 16 bits.
-        scaled_nco_real <= {{7{real_scale_var[16]}}, real_scale_var[16-:9]}; // we should round here instead of just truncating.
-    end
 
     // modulate the doppler by the c/a code.
     // The c/a goes on the quadrature (imaginary) part of the signal.
     // A '1' corresponds to a multiplication by -1. '0' corresponds to +1.
     logic sat_ca;
-    assign sat_ca = ca_seq[ca_sel];
-    logic [15:0] pre_scaled_real, pre_scaled_imag;
+    assign sat_ca = ca_seq[ca_sel];  // pick which of the 36 ca sequences to use.
+    logic [8:0] pre_scaled_real, pre_scaled_imag;
     always_ff @(posedge clk) begin
         if (1 == sat_ca) begin
-            pre_scaled_imag <= -scaled_nco_imag;
+            pre_scaled_imag <= -255;
         end else begin
-            pre_scaled_imag <= +scaled_nco_imag;
+            pre_scaled_imag <= +255;
         end        
-        pre_scaled_real <= +scaled_nco_real;  // P-code not implemented yet.
+        pre_scaled_real <= +180;  // P-code not implemented yet. 180~=255/sqrt(2).
     end
+    
+    // Let's instantiate a Xilinx core for the complex multiplier. This could be changed to something portable with much trouble. 
+    logic [31:0] mult_s_axis_a_tdata, mult_s_axis_b_tdata;
+    assign mult_s_axis_a_tdata[16+:8] = pre_scaled_imag;
+    assign mult_s_axis_a_tdata[ 0+:8] = pre_scaled_real;
+    assign mult_s_axis_b_tdata[16+:8] = nco_imag;
+    assign mult_s_axis_b_tdata[ 0+:8] = nco_real;
+    logic [47:0] mult_m_axis_dout_tdata;
+    doppler_mult doppler_mult_inst (
+        .aclk(clk),
+        .s_axis_a_tvalid    (1'b1),        // input wire s_axis_a_tvalid
+        .s_axis_a_tdata     (mult_s_axis_a_tdata),          // input wire [31 : 0] s_axis_a_tdata
+        .s_axis_b_tvalid    (1'b1),        // input wire s_axis_b_tvalid
+        .s_axis_b_tdata     (mult_s_axis_b_tdata),          // input wire [31 : 0] s_axis_b_tdata
+        .m_axis_dout_tvalid (),  // output wire m_axis_dout_tvalid
+        .m_axis_dout_tdata  (mult_m_axis_dout_tdata)    // output wire [47 : 0] m_axis_dout_tdata
+    );
+    logic [15:0] mult_out_real, mult_out_imag;
+    assign mult_out_imag = mult_m_axis_dout_tdata[26+:16];
+    assign mult_out_real = mult_m_axis_dout_tdata[ 2+:16];    
     
     // Now let's scale the output by the gain.
     logic [31:0] scaled_real, scaled_imag;
     logic [16:0] gain_signed; // systemverilog requires both operands of a multiply to be signed in order to get a signed result.
     assign gain_signed = {1'b0, gain};
     always_ff @(posedge clk) begin
-        scaled_real <= $signed(pre_scaled_real)*$signed(gain_signed);
-        scaled_imag <= $signed(pre_scaled_imag)*$signed(gain_signed);
+        scaled_real <= $signed(mult_out_real)*$signed(gain_signed);
+        scaled_imag <= $signed(mult_out_imag)*$signed(gain_signed);
     end
     assign real_out = scaled_real[30-:16];
     assign imag_out = scaled_imag[30-:16];
