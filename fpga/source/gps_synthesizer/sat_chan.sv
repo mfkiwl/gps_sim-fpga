@@ -15,7 +15,6 @@ module sat_chan (
     logic [8:0] nco_real, nco_imag;    
     doppler_nco doppler_nco_inst ( .clk(clk), .enable(enable), .freq(freq), .real_out(nco_real), .imag_out(nco_imag) );
 
-
     // modulate the doppler by the c/a code.
     // The c/a goes on the quadrature (imaginary) part of the signal.
     // A '1' corresponds to a multiplication by -1. '0' corresponds to +1.
@@ -28,15 +27,15 @@ module sat_chan (
         end else begin
             pre_scaled_imag <= +255;
         end        
-        pre_scaled_real <= +180;  // P-code not implemented yet. 180~=255/sqrt(2).
+        pre_scaled_real <= 0; // +180;  // P-code not implemented yet. 180~=255/sqrt(2).
     end
     
     // Let's instantiate a Xilinx core for the complex multiplier. This could be changed to something portable with much trouble. 
     logic [31:0] mult_s_axis_a_tdata, mult_s_axis_b_tdata;
-    assign mult_s_axis_a_tdata[16+:8] = pre_scaled_imag;
-    assign mult_s_axis_a_tdata[ 0+:8] = pre_scaled_real;
-    assign mult_s_axis_b_tdata[16+:8] = nco_imag;
-    assign mult_s_axis_b_tdata[ 0+:8] = nco_real;
+    assign mult_s_axis_a_tdata[16+:9] = pre_scaled_imag;
+    assign mult_s_axis_a_tdata[ 0+:9] = pre_scaled_real;
+    assign mult_s_axis_b_tdata[16+:9] = nco_imag;
+    assign mult_s_axis_b_tdata[ 0+:9] = nco_real;
     logic [47:0] mult_m_axis_dout_tdata;
     doppler_mult doppler_mult_inst (
         .aclk(clk),
@@ -53,11 +52,9 @@ module sat_chan (
     
     // Now let's scale the output by the gain.
     logic [31:0] scaled_real, scaled_imag;
-    logic [16:0] gain_signed; // systemverilog requires both operands of a multiply to be signed in order to get a signed result.
-    assign gain_signed = {1'b0, gain};
     always_ff @(posedge clk) begin
-        scaled_real <= $signed(mult_out_real)*$signed(gain_signed);
-        scaled_imag <= $signed(mult_out_imag)*$signed(gain_signed);
+        scaled_real <= $signed(mult_out_real)*$signed({1'b0, gain});
+        scaled_imag <= $signed(mult_out_imag)*$signed({1'b0, gain});
     end
     assign real_out = scaled_real[30-:16];
     assign imag_out = scaled_imag[30-:16];

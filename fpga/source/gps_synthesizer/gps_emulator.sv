@@ -82,19 +82,22 @@ module gps_emulator #(
     // instantiate the noise source.
     // The noise is a very good approximation to Gaussian with standard deviation = 1.0 using 16.11 fixed point interpretation.
     logic signed [15:0] noise_real, noise_imag;
-    gng_cmplx gng_cmplx_inst (.clk(clk), .rstn(1'b0), .ce(1'b1), .valid_out(), .real_out(noise_real), .imag_out(noise_imag));
+    gng_cmplx gng_cmplx_inst (.clk(clk), .rstn(enable), .ce(1'b1), .valid_out(), .real_out(noise_real), .imag_out(noise_imag));
     // set the noise level
     logic signed [31:0] noise_scaled_real, noise_scaled_imag;
     always_ff @(posedge clk) begin
-        noise_scaled_real <= noise_real*noise_gain;  // maybe a sign problem with this systemverilog expression.
-        noise_scaled_imag <= noise_imag*noise_gain;
+        noise_scaled_real <= $signed(noise_real)*$signed({1'b0, noise_gain});  
+        noise_scaled_imag <= $signed(noise_imag)*$signed({1'b0, noise_gain});
     end
 
     // Add the Gaussian noise source
+    logic[15:0] dither_real, dither_imag;
+    assign dither_real = noise_scaled_real[31-:16];
+    assign dither_imag = noise_scaled_imag[31-:16];
     logic[15:0] bb_with_noise_real, bb_with_noise_imag;
     always_ff @(posedge clk) begin
-        bb_with_noise_real <= noise_scaled_real[30-:16] + temp_real_reg_reg;
-        bb_with_noise_imag <= noise_scaled_imag[30-:16] + temp_imag_reg_reg;
+        bb_with_noise_real <= dither_real + temp_real_reg_reg;
+        bb_with_noise_imag <= dither_imag + temp_imag_reg_reg;
     end
 
     // Let's put an ILA core here to observe the synthesized signal before quantization.
