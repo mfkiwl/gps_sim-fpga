@@ -13,6 +13,9 @@ load_features ipintegrator
 update_ip_catalog
 
 read_ip ../source/gps_synthesizer/doppler_rom/doppler_rom.xci
+read_ip ../source/gps_synthesizer/doppler_mult/doppler_mult.xci
+read_ip ../source/gps_synthesizer/ca_rom/ca_rom.xci
+read_ip ../source/gps_synthesizer/bb_ila/bb_ila.xci
 upgrade_ip -quiet  [get_ips *]
 generate_target {all} [get_ips *]
 
@@ -23,7 +26,19 @@ set_property synth_checkpoint_mode None    [get_files ./proj.srcs/sources_1/bd/s
 #write_hwdef -force -verbose ./results/system.hdf
 
 # Read in the hdl source.
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_coef.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_ctg.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_interp.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_lzd.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_smul_16_18_sadd_37.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_smul_16_18.v  
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng.v
+read_verilog -sv ../source/gps_synthesizer/gng/rtl/gng_cmplx.sv
+
+read_verilog -sv ../source/gps_synthesizer/doppler_nco.sv
 read_verilog -sv ../source/gps_synthesizer/sat_chan.sv
+read_verilog -sv ../source/gps_synthesizer/gps_emulator.sv
+
 read_verilog -sv ../source/axi_regfile/axi_regfile_v1_0_S00_AXI.sv
 read_verilog -sv ../source/top.sv
 
@@ -33,6 +48,4 @@ read_xdc ../source/top.xdc
 close_project
 
 #########################
-
-
 

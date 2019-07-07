@@ -74,8 +74,10 @@ module gps_emulator #(
     logic[15:0] temp_real_reg, temp_imag_reg;
     logic[15:0] temp_real_reg_reg, temp_imag_reg_reg;
     always_ff @(posedge clk) begin
-        temp_real_reg <= temp_real; temp_imag_reg <= temp_imag;
-        temp_real_reg_reg <= temp_real_reg; temp_imag_reg_reg <= temp_imag_reg;
+        temp_real_reg <= temp_real; 
+        temp_imag_reg <= temp_imag;
+        temp_real_reg_reg <= temp_real_reg; 
+        temp_imag_reg_reg <= temp_imag_reg;
     end
     
 
@@ -96,7 +98,7 @@ module gps_emulator #(
     assign dither_imag = noise_scaled_imag[31-:16];
     logic[15:0] bb_with_noise_real, bb_with_noise_imag;
     always_ff @(posedge clk) begin
-        bb_with_noise_real <= dither_real + temp_real_reg_reg;
+        bb_with_noise_real <= dither_real + temp_real_reg_reg;  // We should have saturation logic here.
         bb_with_noise_imag <= dither_imag + temp_imag_reg_reg;
     end
 

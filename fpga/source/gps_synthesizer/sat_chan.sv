@@ -30,7 +30,7 @@ module sat_chan (
         pre_scaled_real <= 0; // +180;  // P-code not implemented yet. 180~=255/sqrt(2).
     end
     
-    // Let's instantiate a Xilinx core for the complex multiplier. This could be changed to something portable with much trouble. 
+    // Let's instantiate a Xilinx core for the complex multiplier. This could be changed to something portable without much trouble. 
     logic [31:0] mult_s_axis_a_tdata, mult_s_axis_b_tdata;
     assign mult_s_axis_a_tdata[16+:9] = pre_scaled_imag;
     assign mult_s_axis_a_tdata[ 0+:9] = pre_scaled_real;
@@ -47,8 +47,8 @@ module sat_chan (
         .m_axis_dout_tdata  (mult_m_axis_dout_tdata)    // output wire [47 : 0] m_axis_dout_tdata
     );
     logic [15:0] mult_out_real, mult_out_imag;
-    assign mult_out_imag = mult_m_axis_dout_tdata[26+:16];
-    assign mult_out_real = mult_m_axis_dout_tdata[ 2+:16];    
+    assign mult_out_imag = mult_m_axis_dout_tdata[25+:16];
+    assign mult_out_real = mult_m_axis_dout_tdata[ 1+:16];    
     
     // Now let's scale the output by the gain.
     logic [31:0] scaled_real, scaled_imag;
