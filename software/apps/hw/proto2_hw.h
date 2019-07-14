@@ -10,6 +10,7 @@
 #define     FPGA_VERSION        REGFILE_OFFSET+0x04*1  // Returns major and minor version numbers.
     
 // The registers of the GPS emulator.
+#define     EMU_CONTROL         REGFILE_OFFSET+0x04*6  // bit[0] = gps emulator enable.
 #define     EMU_NOISE_GAIN      REGFILE_OFFSET+0x04*7  // Noise level of combined satellite signals.
 
 // These are constants to define the location of registers that are repeated for each SV.
