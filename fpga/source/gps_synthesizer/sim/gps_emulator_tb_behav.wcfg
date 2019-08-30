@@ -12,14 +12,18 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="9951732674fs"></ZoomEndTime>
+      <ZoomEndTime time="24920000001fs"></ZoomEndTime>
       <Cursor1Time time="0fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="236"></NameColumnWidth>
-      <ValueColumnWidth column_width="94"></ValueColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="21" />
+   <wave_markers>
+      <marker label="" time="4191667000" />
+      <marker label="" time="6098333000" />
+   </wave_markers>
    <wvobject type="logic" fp_name="/gps_emulator_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -31,12 +35,10 @@
    <wvobject type="array" fp_name="/gps_emulator_tb/freq">
       <obj_property name="ElementShortName">freq[3:0][31:0]</obj_property>
       <obj_property name="ObjectShortName">freq[3:0][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/gps_emulator_tb/gain">
       <obj_property name="ElementShortName">gain[3:0][15:0]</obj_property>
       <obj_property name="ObjectShortName">gain[3:0][15:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/gps_emulator_tb/ca_sel">
       <obj_property name="ElementShortName">ca_sel[3:0][5:0]</obj_property>
@@ -67,6 +69,14 @@
    <wvobject type="logic" fp_name="/gps_emulator_tb/uut/enable">
       <obj_property name="ElementShortName">enable</obj_property>
       <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/gps_emulator_tb/uut/ca_addr">
+      <obj_property name="ElementShortName">ca_addr[9:0]</obj_property>
+      <obj_property name="ObjectShortName">ca_addr[9:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/gps_emulator_tb/uut/ca_seq">
+      <obj_property name="ElementShortName">ca_seq[35:0]</obj_property>
+      <obj_property name="ObjectShortName">ca_seq[35:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/gps_emulator_tb/uut/bb_with_noise_real">
       <obj_property name="ElementShortName">bb_with_noise_real[15:0]</obj_property>

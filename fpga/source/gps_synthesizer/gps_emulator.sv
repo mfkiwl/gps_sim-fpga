@@ -17,6 +17,7 @@ module gps_emulator #(
 
     // here is the logic to generate the c/a sequences.
     // We generate all 36 c/a codes in phase. Each sat chan can select one to use and (eventually) add delay.
+    localparam integer samp_per_chip = 4;
     logic [9:0]   ca_addr;
     logic [6:0]   ca_chip_count;
     always_ff @(posedge clk) begin
@@ -24,7 +25,7 @@ module gps_emulator #(
             ca_addr <= 0;
             ca_chip_count <= 0;
         end else begin
-            if (99 == ca_chip_count) begin
+            if ((samp_per_chip-1) == ca_chip_count) begin
                 ca_chip_count <= 0;
                 if (1022 == ca_addr) begin
                     ca_addr <= 0;
