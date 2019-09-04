@@ -27,19 +27,20 @@ module sat_chan (
     logic [5:0] bpsk_imag, bpsk_real;
     always_ff @(posedge clk) begin
         if (1 == sat_ca) begin
-            mult_out_imag <= -$signed(dop_nco_imag);
+            bpsk_imag <= -$signed(dop_nco_imag);
+            bpsk_real <= -$signed(dop_nco_real);
         end else begin
-            mult_out_imag <= +$signed(dop_nco_imag);
+            bpsk_imag <= +$signed(dop_nco_imag);
+            bpsk_real <= +$signed(dop_nco_real);
         end        
-        mult_out_real <= dop_nco_real; // Leave real part unmodified (no P code).
     end
 
     
     // Now let's scale the output by the gain.
     logic [22:0] scaled_real, scaled_imag;
     always_ff @(posedge clk) begin
-        scaled_real <= $signed(mult_out_real)*$signed({1'b0, gain});
-        scaled_imag <= $signed(mult_out_imag)*$signed({1'b0, gain});
+        scaled_real <= $signed(bpsk_real)*$signed({1'b0, gain});
+        scaled_imag <= $signed(bpsk_imag)*$signed({1'b0, gain});
     end
     assign real_out = scaled_real[22-:16];
     assign imag_out = scaled_imag[22-:16];

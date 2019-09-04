@@ -28,7 +28,6 @@ module doppler_nco (
         end;
     end;
 
-    logic [31:0] m_axis_data_tdata;
     dop_cos_rom dop_cos_rom_inst ( .clk(clk), .a(phase[31-:6]), .qspo(real_out));
     dop_sin_rom dop_sin_rom_inst ( .clk(clk), .a(phase[31-:6]), .qspo(imag_out));
     

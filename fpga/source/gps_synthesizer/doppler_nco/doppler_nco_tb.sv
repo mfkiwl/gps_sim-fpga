@@ -27,15 +27,15 @@ module doppler_nco_tb();
             dv_in = 1;
             #(clk_period*1);
             dv_in = 0;
-            #(clk_period*1);
+            #(clk_period*15);
         end
         
-        freq = 32'h02468ace;
+        freq = 32'h04468ace;
         for (int i=0; i<1000; i++) begin
             dv_in = 1;
             #(clk_period*1);
             dv_in = 0;
-            #(clk_period*1);
+            #(clk_period*15);
         end
         $stop;
         

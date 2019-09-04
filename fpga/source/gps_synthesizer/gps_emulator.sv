@@ -5,14 +5,16 @@
 module gps_emulator #(
     parameter int Nsat = 4
 )(
-    input  logic        clk,   // this is the system clock, 102.3MHz.
-    input  logic        enable,
-    input  logic[31:0]  freq        [Nsat-1:0], // the doppler frequency for each satellite.
+    input  logic        clk,                    // this is the system clock.
+    input  logic        reset,                  // active high reset. to be controlled by software and released at time zero.
+    input  logic        dv_in,                  // this sets the sample cadence.
+    input  logic[31:0]  code_freq   [Nsat-1:0], // the code rate for each satellite.
     input  logic[31:0]  dop_freq    [Nsat-1:0], // the doppler frequency for each satellite.
     input  logic[15:0]  gain        [Nsat-1:0], // the gain of each satellite
     input  logic[5:0]   ca_sel      [Nsat-1:0], // the C/A sequence of each satellite 0-35 corresponds to SV 1-36. SV 37 not supported.
     input  logic[15:0]  noise_gain,             // gain of noise added to combined signal.
     // quantized baseband
+    output logic       dv_out,
     output logic[7:0]  real_out,  imag_out
 );
 
@@ -20,19 +22,20 @@ module gps_emulator #(
     // generate the individual satellite channel blocks.
     logic[15:0]  sat_real_out   [Nsat-1:0];
     logic[15:0]  sat_imag_out   [Nsat-1:0];
+    logic[Nsat-1:0] sat_dv_out;
     genvar sat;
     generate for (sat=0; sat<Nsat; sat++) begin
         sat_chan sat_chan_inst (
-            .clk(clk),
-            .reset(),
-            .dv_in(),
-            .dop_freq(freq[sat]),
-            .code_freq(code_freq[sat]),
-            .gain(gain[sat]),
-            .ca_sel(ca_sel[sat]),
-            .dv_out(),
-            .real_out(sat_real_out[sat]),
-            .imag_out(sat_imag_out[sat])
+            .clk        (clk),
+            .reset      (reset),
+            .dv_in      (dv_in),
+            .dop_freq   (dop_freq[sat]),
+            .code_freq  (code_freq[sat]),
+            .gain       (gain[sat]),
+            .ca_sel     (ca_sel[sat]),
+            .dv_out     (sat_dv_out[sat]),
+            .real_out   (sat_real_out[sat]),
+            .imag_out   (sat_imag_out[sat])
         );
     end endgenerate
 
@@ -48,8 +51,6 @@ module gps_emulator #(
             temp_imag += sat_imag_out[i];
         end
     end
-
-
     // Here are some registers to allow synthesis pipeline rebalancing.
     logic[15:0] temp_real_reg, temp_imag_reg;
     logic[15:0] temp_real_reg_reg, temp_imag_reg_reg;
@@ -62,10 +63,10 @@ module gps_emulator #(
     
 
     // instantiate the noise source.
-    // The noise is a very good approximation to Gaussian with standard deviation = 1.0 using 16.11 fixed point interpretation.
+    // This noise is a very good approximation to Gaussian with standard deviation = 1.0 using 16.11 fixed point interpretation.
     logic signed [15:0] noise_real, noise_imag;
-    gng_cmplx gng_cmplx_inst (.clk(clk), .rstn(enable), .ce(1'b1), .valid_out(), .real_out(noise_real), .imag_out(noise_imag));
-    // set the noise level
+    gng_cmplx gng_cmplx_inst (.clk(clk), .rstn(~reset), .ce(dv_in), .valid_out(), .real_out(noise_real), .imag_out(noise_imag));
+    // adjust the noise level
     logic signed [31:0] noise_scaled_real, noise_scaled_imag;
     always_ff @(posedge clk) begin
         noise_scaled_real <= $signed(noise_real)*$signed({1'b0, noise_gain});  
@@ -96,6 +97,8 @@ module gps_emulator #(
         real_out <= bb_with_noise_real[15-:8];
         imag_out <= bb_with_noise_imag[15-:8];
     end
+    
+    always_ff @(posedge clk) dv_out <= dv_in;
 
 endmodule
 

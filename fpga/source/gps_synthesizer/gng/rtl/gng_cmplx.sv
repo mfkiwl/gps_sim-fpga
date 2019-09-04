@@ -12,40 +12,42 @@ module gng_cmplx #(
 )
 (
     // System signals
-    input clk,                    // system clock
-    input rstn,                   // system synchronous reset, active low
+    input logic   clk,                    // system clock
+    input logic   rstn,                   // system synchronous reset, active low
 
     // Data interface
-    input ce,                     // clock enable
-    output valid_out,             // output data valid
-    output [15:0] real_out, imag_out        // output data, s<16,11>
+    input logic        ce,                     // clock enable
+    output logic       valid_out,             // output data valid
+    output logic[15:0] real_out, imag_out        // output data, s<16,11>
 );
 
-
-gng #(
-   .INIT_Z1(INIT_Z1),
-   .INIT_Z2(INIT_Z2),
-   .INIT_Z3(INIT_Z3)
-)
-gng_real (
-    .clk(clk),
-    .rstn(rstn),
-    .ce(ce),
-    .valid_out(valid_out),
-    .data_out(real_out)
-);
-
-gng #(
-   .INIT_Z1(INIT_Z4),
-   .INIT_Z2(INIT_Z5),
-   .INIT_Z3(INIT_Z6)
-)
-gng_imag (
-    .clk(clk),
-    .rstn(rstn),
-    .ce(ce),
-    .valid_out(),
-    .data_out(imag_out)
-);
+    logic pre_valid_out;
+    gng #(
+       .INIT_Z1(INIT_Z1),
+       .INIT_Z2(INIT_Z2),
+       .INIT_Z3(INIT_Z3)
+    )
+    gng_real (
+        .clk(clk),
+        .rstn(rstn),
+        .ce(ce),
+        .valid_out(pre_valid_out),
+        .data_out(real_out)
+    );
+    
+    gng #(
+       .INIT_Z1(INIT_Z4),
+       .INIT_Z2(INIT_Z5),
+       .INIT_Z3(INIT_Z6)
+    )
+    gng_imag (
+        .clk(clk),
+        .rstn(rstn),
+        .ce(ce),
+        .valid_out(),
+        .data_out(imag_out)
+    );
+    
+    always_ff @(posedge clk) valid_out <= pre_valid_out;
 
 endmodule
