@@ -13,7 +13,7 @@ LIB_OBJS := $(subst .c,.o,$(LIB_FILES))
 
 test: test.o $(LIB_OBJS) $(PUBLIC_LIBS)
 # $@: target file name, $^: all prerequisites
-	gcc -g -o $@ $^
+	gcc -g -o $@ $^ -lm
 
 run: test 
 	@echo "You must be in root."
