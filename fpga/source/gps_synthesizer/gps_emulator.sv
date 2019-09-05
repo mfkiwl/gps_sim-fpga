@@ -93,7 +93,7 @@ module gps_emulator #(
     bb_ila bb_ila_inst (.clk(clk), .probe0({bb_with_noise_real, bb_with_noise_imag})); // 16+16
     
 
-    // Quantize down to emulate commercial GPS RF front end chips like the MAX2769.
+    // Quantize
     // This should include rounding and saturation at desired levels.
     // For now let's just map to the most significant bits.
     always_ff @(posedge clk) begin
