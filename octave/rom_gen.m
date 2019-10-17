@@ -9,7 +9,7 @@ fp = fopen("ca_rom.coe", "w");
 fprintf(fp, "memory_initialization_radix=2;\n");
 fprintf(fp, "memory_initialization_vector=\n");
 for i=1:1023
-    for j= 1:36
+    for j= 36:-1:1
         fprintf(fp, "%d", ca(j,i));
     endfor
     if (1023 != i)
